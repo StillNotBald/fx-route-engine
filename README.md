@@ -20,7 +20,7 @@ Provider quotes (bank board rates, dealer quotes, comparison-site quotes) are **
 
 ## Quick start
 
-Requires Node 22.6+ (it runs the TypeScript directly; tested on Node 24).
+Requires Node 22.6+ (it runs the TypeScript directly; tests pass on Node 22 and 24).
 
 ```sh
 npm install
