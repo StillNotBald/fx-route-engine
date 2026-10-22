@@ -62,10 +62,13 @@ test('an HTTP error surfaces with the url; a hung source times out', async () =>
   const bad = (async () => json({}, 500)) as unknown as typeof fetch
   await assert.rejects(frankfurter.fetch([['SGD', 'THB']], NOW, bad), /HTTP 500/)
   setSourceTimeoutMs(50)
+  // AbortSignal.timeout's timer is unref'd and the mock holds no socket, so on Node 22 the event loop
+  // would empty before the abort fires and node:test cancels the test. Keep the loop alive meanwhile.
+  const keepAlive = setInterval(() => {}, 1000)
   try {
     const hang = ((_: unknown, init?: RequestInit) => new Promise((_res, rej) => {
       init?.signal?.addEventListener('abort', () => rej(Object.assign(new Error('aborted'), { name: 'TimeoutError' })))
     })) as unknown as typeof fetch
     await assert.rejects(frankfurter.fetch([['SGD', 'THB']], NOW, hang), /timed out/)
-  } finally { setSourceTimeoutMs() }
+  } finally { clearInterval(keepAlive); setSourceTimeoutMs() }
 })
