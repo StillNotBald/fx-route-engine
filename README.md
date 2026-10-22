@@ -2,13 +2,15 @@
 
 A small, tested TypeScript engine for comparing the all-in cost of converting a large amount of money across different routes.
 
+It is the calculation core of FX Comparison, a private demo web app. This repository holds the engine only: the app's screens, bank-rate feeds and AI assistant are not included.
+
 > **Demo and educational use only. Not financial advice. No affiliation with any bank or provider. Rates may be stale.**
 > Nothing here is an offer to convert or transfer money, and the engine never moves money. Bank and provider names, where they appear in your own data, belong to their owners.
 
 ## What it does
 
 - **Consensus mid** from several independent free sources: the median of the sources that agree, with outliers (default more than 50 bps from the first-pass median) rejected and shown, not hidden.
-- **Wise-style markup model**: a provider's rate goes stale faster than its markup. Store each customer rate as a markup in bps against the mid at capture, then re-apply that markup to a fresher mid.
+- **Wise-style markup model**: a provider's rate goes stale faster than its markup. Store each customer rate as a markup in bps against the mid at capture, then re-apply that markup to a fresher mid. For example, a bank quoting 25.62 when the mid was 25.80 has a markup of about 69.8 bps; if the mid later moves to 25.90, the same markup gives an estimated rate of about 25.72.
 - **Route modelling**: a route is a list of legs (transfers and conversions). The engine walks the legs and tracks the balance, so "convert here" and "send first, convert there" are compared on the same footing.
 - **SWIFT charge codes OUR / SHA / BEN**: decides which transfer fees are paid on top and which are deducted from the money in flight. Each fee is valued at the rate of the leg where it is paid (an alternative "reference" valuation is available).
 - **Transit-risk probability**: money in flight unconverted is exposed to the rate. The engine turns daily volatility into a one-sigma band and the chance that a normal move wipes out a route's advantage.
@@ -31,6 +33,31 @@ The example compares SGD 1,000,000 to THB three ways, using generic names and ma
 - A. convert in Singapore ("Your SG entity")
 - B. telegraphic transfer to "Your Thai entity", then convert there
 - C. convert in Thailand from funds already held there
+
+`npm run example` prints:
+
+```text
+SGD 1,000,000 to THB, three routes (illustrative inputs)
+reference mid 25.80 (illustrative reference), daily vol 18.9 bps (assumed)
+
+A. Convert in Singapore (Your SG entity)
+  spent SGD 1000000.00 | net THB 25620000.00 | effective 25.620000
+  cost vs mid 69.77 bps | edge vs A 0.00 THB | transit days 0 | 1-sigma band 0
+B. TT the SGD to Your Thai entity, then convert
+  spent SGD 1000020.00 | net THB 25709742.90 | effective 25.709229
+  cost vs mid 35.18 bps | edge vs A 89228.72 THB | transit days 1 | 1-sigma band 48587
+  chance a transit move erases the edge: 3.3%
+C. Convert in Thailand (SGD already held there)
+  spent SGD 1000000.00 | net THB 25700000.00 | effective 25.700000
+  cost vs mid 38.76 bps | edge vs A 80000.00 THB | transit days 0 | 1-sigma band 0
+
+Best on net received: B
+warning: Transit band uses an assumed 19 bps daily vol — not enough stored history yet.
+```
+
+In words: sending first and converting in Thailand (B) nets about THB 89,000 more than converting in Singapore (A), and there is about a 3% chance that a normal one-day rate move while the money is in flight wipes that out.
+
+The same comparison in code:
 
 ```ts
 import { compareRoutes } from './src/core/route.ts'
