@@ -1,0 +1,35 @@
+fx-route-engine
+Copyright 2026 Cheng Chu Ling
+
+This product is licensed under the Apache License, Version 2.0.
+See the LICENSE file for the full license text.
+
+Demo and educational use only. Not financial advice. No affiliation with any
+bank or provider. Rates may be stale. Trademarks and names belong to their
+respective owners.
+
+------------------------------------------------------------------------------
+Data sources (accessed by the optional adapters in src/adapters; no data is
+bundled in this repository)
+------------------------------------------------------------------------------
+
+- Frankfurter (https://frankfurter.dev). Software is MIT-licensed. The rates it
+  serves are derived from central bank and official publications, including
+  the European Central Bank. Attribution to those publishers applies.
+- fawazahmed0/exchange-api (https://github.com/fawazahmed0/exchange-api),
+  served via jsDelivr. Released under CC0 1.0.
+- Bank Negara Malaysia open API (https://apikijangportal.bnm.gov.my).
+  Exchange-rate data (c) Bank Negara Malaysia. Refer to BNM's terms of use
+  for any use beyond personal or educational experimentation.
+
+------------------------------------------------------------------------------
+Third-party software
+------------------------------------------------------------------------------
+
+- decimal.js (MIT), (c) Michael Mclaughlin. Runtime dependency.
+- typescript (Apache-2.0) and @types/node (MIT). Development dependencies,
+  not distributed with this package.
+
+The Wise-style markup model is a generally described technique (a provider's
+markup against the mid-market rate). This project contains no Wise code or
+data and is not affiliated with or endorsed by Wise.

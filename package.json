@@ -1,0 +1,20 @@
+{
+  "name": "fx-route-engine",
+  "version": "0.1.0",
+  "description": "FX route comparison engine: consensus mid from free sources, a Wise-style markup model, SWIFT OUR/SHA/BEN fee modelling and a transit-risk probability. Demo and educational use only.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": { "node": ">=22.6" },
+  "scripts": {
+    "test": "node --test \"test/**/*.test.ts\"",
+    "typecheck": "tsc --noEmit",
+    "example": "node examples/compare.ts"
+  },
+  "dependencies": {
+    "decimal.js": "10.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.3.0",
+    "typescript": "5.9.2"
+  }
+}
